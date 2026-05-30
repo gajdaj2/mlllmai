@@ -1,0 +1,20 @@
+{
+  "_comment": "Przykładowy hooks.json — skopiuj do ~/.copilot/hooks.json aby aktywować",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": { "tool": "edit", "filePattern": "*.py" },
+        "command": "ruff format ${file} && ruff check --fix ${file}"
+      },
+      {
+        "matcher": { "tool": "edit", "filePattern": "*.ts" },
+        "command": "npx prettier --write ${file}"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "echo '✅ Sesja zakończona. Pamiętaj o git status!'"
+      }
+    ]
+  }
+}

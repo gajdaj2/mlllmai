@@ -1,0 +1,5 @@
+dziś rano testowałam logowanie na qa1
+wprowadziłam dobry login i hasło i nic
+po 30 sekundach pojawił sie błąd
+w konsoli czerwony 500
+firefox 128, mac

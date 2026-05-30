@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="bookstore-tests" tests="47" failures="6" errors="1" skipped="3" time="124.83">
+  <testsuite name="tests.api.test_books" tests="15" failures="2" errors="0" skipped="0" time="32.41">
+    <testcase classname="tests.api.test_books.TestCreateBook" name="test_create_book_with_valid_data_returns_201" time="0.42"/>
+    <testcase classname="tests.api.test_books.TestCreateBook" name="test_create_book_without_auth_returns_401" time="0.18"/>
+    <testcase classname="tests.api.test_books.TestCreateBook" name="test_create_book_with_empty_title_returns_422" time="0.15"/>
+    <testcase classname="tests.api.test_books.TestCreateBook" name="test_create_book_with_invalid_isbn_returns_422" time="0.14"/>
+    <testcase classname="tests.api.test_books.TestCreateBook" name="test_create_book_with_duplicate_isbn_returns_409" time="0.39">
+      <failure message="AssertionError: expected 409, got 500" type="AssertionError">
+        File "tests/api/test_books.py", line 87
+        assert response.status_code == 409, f"Expected 409 for duplicate ISBN, got {response.status_code}"
+        AssertionError: Expected 409 for duplicate ISBN, got 500
+      </failure>
+    </testcase>
+    <testcase classname="tests.api.test_books.TestListBooks" name="test_list_books_returns_200" time="0.28"/>
+    <testcase classname="tests.api.test_books.TestListBooks" name="test_list_books_with_pagination" time="0.45"/>
+    <testcase classname="tests.api.test_books.TestListBooks" name="test_list_books_filter_by_author" time="0.33"/>
+    <testcase classname="tests.api.test_books.TestListBooks" name="test_list_books_filter_by_tag" time="0.31">
+      <failure message="KeyError: 'items' missing in response" type="KeyError">
+        New ?tag= filter returns empty body instead of {items: [], total: 0}
+      </failure>
+    </testcase>
+    <testcase classname="tests.api.test_books.TestGetBook" name="test_get_book_returns_200" time="0.22"/>
+    <testcase classname="tests.api.test_books.TestGetBook" name="test_get_book_not_found_returns_404" time="0.18"/>
+    <testcase classname="tests.api.test_books.TestDeleteBook" name="test_delete_book_returns_204" time="0.31"/>
+    <testcase classname="tests.api.test_books.TestDeleteBook" name="test_delete_book_releases_isbn" time="0.42"/>
+    <testcase classname="tests.api.test_books.TestDeleteBook" name="test_delete_nonexistent_book_returns_404" time="0.25"/>
+    <testcase classname="tests.api.test_books.TestDeleteBook" name="test_delete_book_without_auth_returns_401" time="0.20"/>
+  </testsuite>
+
+  <testsuite name="tests.api.test_orders" tests="8" failures="1" errors="0" skipped="0" time="21.14">
+    <testcase classname="tests.api.test_orders.TestCreateOrder" name="test_create_order_with_valid_items" time="0.55"/>
+    <testcase classname="tests.api.test_orders.TestCreateOrder" name="test_create_order_without_auth" time="0.21"/>
+    <testcase classname="tests.api.test_orders.TestCreateOrder" name="test_create_order_with_empty_items" time="0.18"/>
+    <testcase classname="tests.api.test_orders.TestCreateOrder" name="test_create_order_with_nonexistent_book" time="0.33"/>
+    <testcase classname="tests.api.test_orders.TestCreateDraft" name="test_create_draft_order" time="0.41">
+      <failure message="ConnectionError: /orders/draft endpoint returned 502" type="ConnectionError">
+        New endpoint POST /orders/draft (PR #420) — staging response 502
+      </failure>
+    </testcase>
+    <testcase classname="tests.api.test_orders.TestMyOrders" name="test_get_my_orders_returns_user_orders" time="0.62"/>
+    <testcase classname="tests.api.test_orders.TestMyOrders" name="test_get_my_orders_unauthorized" time="0.19"/>
+    <testcase classname="tests.api.test_orders.TestMyOrders" name="test_get_my_orders_empty_for_new_user" time="0.45"/>
+  </testsuite>
+
+  <testsuite name="tests.api.test_auth" tests="6" failures="0" errors="0" skipped="0" time="8.92">
+    <testcase classname="tests.api.test_auth" name="test_login_with_valid_credentials" time="0.34"/>
+    <testcase classname="tests.api.test_auth" name="test_login_with_invalid_password" time="0.28"/>
+    <testcase classname="tests.api.test_auth" name="test_login_with_nonexistent_user" time="0.25"/>
+    <testcase classname="tests.api.test_auth" name="test_jwt_token_format" time="0.31"/>
+    <testcase classname="tests.api.test_auth" name="test_rate_limiting_5_attempts_per_15min" time="2.14"/>
+    <testcase classname="tests.api.test_auth" name="test_expired_token_returns_401" time="1.28"/>
+  </testsuite>
+
+  <testsuite name="tests.e2e.test_checkout" tests="9" failures="3" errors="1" skipped="2" time="48.21">
+    <testcase classname="tests.e2e.test_checkout.TestCheckoutWizard" name="test_complete_checkout_flow_with_card" time="8.42"/>
+    <testcase classname="tests.e2e.test_checkout.TestCheckoutWizard" name="test_complete_checkout_flow_with_blik" time="9.18">
+      <failure message="TimeoutError: BLIK confirmation page did not load" type="TimeoutError">
+        Stripe BLIK redirect fails on staging in Chromium. Last screenshot in artifacts/.
+      </failure>
+    </testcase>
+    <testcase classname="tests.e2e.test_checkout.TestCheckoutWizard" name="test_complete_checkout_flow_with_apple_pay" time="0">
+      <skipped message="Apple Pay requires macOS+Safari, runner is Linux"/>
+    </testcase>
+    <testcase classname="tests.e2e.test_checkout.TestCheckoutWizard" name="test_cancel_checkout_at_step_2" time="6.21"/>
+    <testcase classname="tests.e2e.test_checkout.TestCheckoutWizard" name="test_validation_errors_at_address_step" time="4.15">
+      <failure message="Element not found: data-testid='address-error-zip'" type="LocatorError">
+        Selector zmieniony bez aktualizacji testu (data-testid moved to span).
+      </failure>
+    </testcase>
+    <testcase classname="tests.e2e.test_cart.TestCart" name="test_add_book_to_cart" time="4.31"/>
+    <testcase classname="tests.e2e.test_cart.TestCart" name="test_cart_persists_after_refresh" time="5.42">
+      <failure message="AssertionError: cart empty after refresh in Safari" type="AssertionError">
+        Bug #414 nadal się reprodukuje na Safari (fix nie merged)
+      </failure>
+    </testcase>
+    <testcase classname="tests.e2e.test_cart.TestCart" name="test_remove_from_cart" time="3.85"/>
+    <testcase classname="tests.e2e.test_dark_mode.TestDarkMode" name="test_dark_mode_persists" time="6.67">
+      <error message="WebDriverError: stale element reference" type="WebDriverError">
+        Flaky test — failed 3/10 runs in nightly.
+      </error>
+    </testcase>
+  </testsuite>
+
+  <testsuite name="tests.performance.test_checkout_load" tests="3" failures="0" errors="0" skipped="1" time="13.15">
+    <testcase classname="tests.performance.test_checkout_load" name="test_100_concurrent_users_checkout" time="6.42"/>
+    <testcase classname="tests.performance.test_checkout_load" name="test_p95_response_under_500ms" time="6.73"/>
+    <testcase classname="tests.performance.test_checkout_load" name="test_1000_concurrent_users" time="0">
+      <skipped message="Test exceeds staging environment capacity, run in dedicated env"/>
+    </testcase>
+  </testsuite>
+
+  <testsuite name="tests.security.test_auth_security" tests="6" failures="0" errors="0" skipped="0" time="1.00">
+    <testcase classname="tests.security.test_auth_security" name="test_jwt_signature_validation" time="0.18"/>
+    <testcase classname="tests.security.test_auth_security" name="test_jwt_expiration" time="0.22"/>
+    <testcase classname="tests.security.test_auth_security" name="test_password_hash_not_in_response" time="0.15"/>
+    <testcase classname="tests.security.test_auth_security" name="test_rate_limit_enforces_block" time="0.21"/>
+    <testcase classname="tests.security.test_auth_security" name="test_sql_injection_login" time="0.13"/>
+    <testcase classname="tests.security.test_auth_security" name="test_xss_in_book_title" time="0.11"/>
+  </testsuite>
+</testsuites>

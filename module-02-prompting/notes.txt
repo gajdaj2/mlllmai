@@ -1,0 +1,17 @@
+notatki z testów 24.05, popołudniem
+========================================
+
+- kliknęłam submit z pustym emailem i się wywaliło na 500
+- coś tam pisało o NoneType is not subscriptable
+- screenshot zrobiłam, jest w screenshots/error-2024-05-24.png
+- chrome 132.0.6834.83, windows 11 22H2
+- środowisko test (test.bookstore.local)
+- aplikacja v 1.4.2
+- powtarzalność: 3/3 prób
+- powtórzyłam też z innym kontem - to samo
+- na PROD nie sprawdzałam, nie chciałam ryzykować
+- log z konsoli: api.bookstore.local/books 500 (Internal Server Error)
+- response body: {"detail": "Internal server error"}
+
+dodatkowo: na firefoxie się NIE wywaliło, tylko pokazało "Pole email jest wymagane" - red border, polskie
+nie wiem czy to ten sam bug czy dwa różne

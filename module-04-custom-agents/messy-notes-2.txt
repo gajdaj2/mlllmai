@@ -1,0 +1,13 @@
+WAŻNE - przed releasem!!!
+
+testowałam koszyk, czasem znikają książki
+nie zawsze, raz na 5-6 prób
+chyba jak kliknę szybko 2 razy
+po refresh wracają
+ale to dziwne że tak się dzieje
+
+środowisko: staging
+mac, chrome najnowszy
+godzina: 14:30 - 16:00 dzisiaj
+liczba prób: ~20
+ile razy się powtórzyło: 4 razy

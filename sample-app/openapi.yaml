@@ -1,0 +1,175 @@
+openapi: 3.0.3
+info:
+  title: Bookstore API
+  description: Sample API dla warsztatów Copilot CLI. Sklep z książkami.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000
+    description: Local dev
+
+paths:
+  /books:
+    get:
+      summary: Lista książek
+      tags: [books]
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+        - name: offset
+          in: query
+          schema: { type: integer, minimum: 0, default: 0 }
+        - name: author
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: Lista książek
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items: { type: array, items: { $ref: '#/components/schemas/Book' } }
+                  total: { type: integer }
+
+    post:
+      summary: Utwórz książkę
+      tags: [books]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BookCreate' }
+      responses:
+        '201':
+          description: Utworzono
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Book' }
+        '401':
+          description: Brak autoryzacji
+        '409':
+          description: Książka o tym ISBN już istnieje
+        '422':
+          description: Błąd walidacji
+
+  /books/{id}:
+    get:
+      summary: Szczegóły książki
+      tags: [books]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Szczegóły
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Book' }
+        '404':
+          description: Nie znaleziono
+
+    delete:
+      summary: Usuń książkę
+      tags: [books]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '204':
+          description: Usunięto
+        '401':
+          description: Brak autoryzacji
+        '404':
+          description: Nie znaleziono
+
+  /orders:
+    post:
+      summary: Złóż zamówienie
+      tags: [orders]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required: [book_id, quantity]
+                    properties:
+                      book_id: { type: integer }
+                      quantity: { type: integer, minimum: 1 }
+      responses:
+        '201':
+          description: Zamówienie utworzone
+        '401':
+          description: Brak autoryzacji
+        '422':
+          description: Błąd walidacji
+
+  /auth/login:
+    post:
+      summary: Logowanie i uzyskanie tokena
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password]
+              properties:
+                username: { type: string }
+                password: { type: string }
+      responses:
+        '200':
+          description: Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token: { type: string }
+                  token_type: { type: string, example: bearer }
+        '401':
+          description: Nieprawidłowe dane
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Book:
+      type: object
+      properties:
+        id: { type: integer }
+        title: { type: string, minLength: 1, maxLength: 200 }
+        author: { type: string, minLength: 1, maxLength: 100 }
+        isbn: { type: string, pattern: '^[0-9]{13}$' }
+        price: { type: number, format: float, minimum: 0 }
+      required: [id, title, author, isbn, price]
+
+    BookCreate:
+      type: object
+      properties:
+        title: { type: string, minLength: 1, maxLength: 200 }
+        author: { type: string, minLength: 1, maxLength: 100 }
+        isbn: { type: string, pattern: '^[0-9]{13}$' }
+        price: { type: number, format: float, minimum: 0 }
+      required: [title, author, isbn, price]
